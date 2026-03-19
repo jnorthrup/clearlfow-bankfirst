@@ -10,7 +10,9 @@ type View =
   | 'entity'
   | 'addEntity'
   | 'fundingRails'
-  | 'oidDebtInstrument';
+  | 'oidDebtInstrument'
+  | 'governanceDocs'
+  | 'governanceQA';
 
 interface SidebarProps {
   onNavigate: (view: View, entityId?: string) => void;

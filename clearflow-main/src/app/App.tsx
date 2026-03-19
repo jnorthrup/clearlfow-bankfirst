@@ -9,6 +9,7 @@ import {
   PlaidSignalResponse,
   IdentityVerificationStatus,
   PaymentRail,
+  PlaidVerificationStatus,
 } from '../types/app.models';
 import { ConfirmationModal } from '../components/confirmation-modal/ConfirmationModal';
 import { EntityDetail } from '../components/entity-analysis/EntityDetail';
@@ -47,7 +48,9 @@ type View =
   | 'entity'
   | 'addEntity'
   | 'fundingRails'
-  | 'oidDebtInstrument';
+  | 'oidDebtInstrument'
+  | 'governanceDocs'
+  | 'governanceQA';
 
 type PublicView = 'entry' | 'pathSelect' | 'intake' | 'login';
 
@@ -342,7 +345,7 @@ export const App: React.FC = () => {
     if (!isAddEntityFormValid) return;
 
     let identityStatus: IdentityVerificationStatus = 'unverified';
-    let bankVerificationStatus: string | undefined = undefined;
+    let bankVerificationStatus: PlaidVerificationStatus | undefined = undefined;
     let bankSourcedOwnerNames: string[] | undefined = undefined;
     let accountNumbers = undefined;
     let itemId = undefined;

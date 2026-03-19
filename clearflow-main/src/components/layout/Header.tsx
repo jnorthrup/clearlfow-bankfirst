@@ -8,7 +8,9 @@ type View =
   | 'entity'
   | 'addEntity'
   | 'fundingRails'
-  | 'oidDebtInstrument';
+  | 'oidDebtInstrument'
+  | 'governanceDocs'
+  | 'governanceQA';
 
 interface HeaderProps {
   view: View;

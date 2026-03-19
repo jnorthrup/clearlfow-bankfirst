@@ -40,6 +40,7 @@ interface AuthContextType {
   authStatus: AuthStatus;
   savingStatus: SavingStatus;
   appData: AppData | null;
+  apiAccessToken: string | null;
   renderGoogleButton: (elementId: string) => void;
   mockLogin: (name: string, email: string) => void;
   updateUser: (user: User) => void;
@@ -331,6 +332,7 @@ export const AuthProvider: React.FC<{ children: ReactNode }> = ({ children }) =>
     authStatus: state.status,
     savingStatus: savingStatus,
     appData: state.appData,
+    apiAccessToken: state.apiAccessToken,
     renderGoogleButton,
     mockLogin,
     updateUser,
