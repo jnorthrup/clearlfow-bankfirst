@@ -305,7 +305,7 @@ Return a single JSON object that strictly follows this schema. Do not include an
         }
       });
       
-      return response.text;
+      return response.text ?? '';
 
     } catch (error) {
       console.error('Error querying documents with Gemini:', error);
