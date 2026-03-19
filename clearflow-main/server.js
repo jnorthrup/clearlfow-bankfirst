@@ -6,6 +6,7 @@ import bodyParser from 'body-parser';
 import dotenv from 'dotenv';
 import cors from 'cors';
 import plaidApiRoutes from './server/routes/plaid.js';
+import verificationRoutes from './server/routes/verification.js';
 
 // Load environment variables from .env file
 dotenv.config();
@@ -19,6 +20,9 @@ app.use(cors());
 // Use JSON parser for all incoming request bodies
 // Note: Webhook verification needs the raw body, so it's handled separately.
 app.use('/api/plaid/webhook', bodyParser.raw({ type: 'application/json' }));
+app.use('/api/verification/stripe/webhook', bodyParser.raw({ type: 'application/json' }));
+app.use('/api/verification/plaid/webhook', bodyParser.raw({ type: 'application/json' }));
+app.use('/api/verification/bank/webhook', bodyParser.raw({ type: 'application/json' }));
 // All other routes can use the standard JSON parser.
 app.use(bodyParser.json());
 
@@ -26,6 +30,9 @@ app.use(bodyParser.json());
 // --- API Routes ---
 // Mount the modular Plaid router at the /api/plaid base path.
 app.use('/api/plaid', plaidApiRoutes);
+
+// Mount the identity verification routes
+app.use('/api/verification', verificationRoutes);
 
 // --- Health Check Endpoint ---
 app.get('/health', (req, res) => {

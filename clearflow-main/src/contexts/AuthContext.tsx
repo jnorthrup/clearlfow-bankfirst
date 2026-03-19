@@ -12,7 +12,16 @@ const debounce = (func: (...args: any[]) => void, delay: number) => {
   };
 };
 
-export type AuthStatus = 'unauthenticated' | 'pending-gsi' | 'pending-drive-check' | 'pending-profile-setup' | 'pending-verification' | 'authenticated';
+export type AuthStatus = 
+  | 'unauthenticated' 
+  | 'pending-basic-info' 
+  | 'pending-identity-verification' 
+  | 'pending-google-binding'
+  | 'pending-gsi' 
+  | 'pending-drive-check' 
+  | 'pending-profile-setup' 
+  | 'pending-verification' 
+  | 'authenticated';
 export type SavingStatus = 'idle' | 'saving' | 'saved' | 'error';
 
 interface AuthState {
@@ -37,6 +46,18 @@ interface AuthContextType {
   updateEntities: (entities: Entity[]) => void;
   completeProfileSetup: (name: string, email: string) => void;
   completeVerification: () => void;
+  completeOnboarding: (data: {
+    name: string;
+    email: string;
+    useCase: string;
+    identityVerification: {
+      provider: string;
+      status: string;
+      verifiedAt: string;
+      score?: number;
+    };
+    googleSub?: string;
+  }) => void;
   logout: () => void;
   requestDriveAccess: () => void;
 }
@@ -262,7 +283,40 @@ export const AuthProvider: React.FC<{ children: ReactNode }> = ({ children }) =>
     userDataService.clearCache();
     initialDataLoaded.current = false;
     setSavingStatus('idle');
-    setState({ user: null, token: null, apiAccessToken: null, status: 'unauthenticated', appData: null, gsiUser: null });
+    setState({ status: 'unauthenticated', appData: null, token: null, apiAccessToken: null, gsiUser: null });
+  };
+
+  const completeOnboarding = (data: {
+    name: string;
+    email: string;
+    useCase: string;
+    identityVerification: {
+      provider: string;
+      status: string;
+      verifiedAt: string;
+      score?: number;
+    };
+    googleSub?: string;
+  }) => {
+    const now = new Date().toISOString();
+    const newUser: User = {
+      id: crypto.randomUUID(),
+      name: data.name,
+      email: data.email,
+      useCase: data.useCase,
+      isVerified: data.identityVerification.status === 'verified',
+      identityVerification: {
+        provider: data.identityVerification.provider as any,
+        status: data.identityVerification.status as any,
+        verifiedAt: data.identityVerification.verifiedAt,
+        identityScore: data.identityVerification.score,
+      },
+      googleSub: data.googleSub,
+      createdAt: now,
+      updatedAt: now,
+    };
+    const newAppData: AppData = { user: newUser, entities: [] };
+    setState(s => ({ ...s, appData: newAppData, status: 'authenticated' }));
   };
 
   const requestDriveAccess = () => {
@@ -283,6 +337,7 @@ export const AuthProvider: React.FC<{ children: ReactNode }> = ({ children }) =>
     updateEntities,
     completeProfileSetup,
     completeVerification,
+    completeOnboarding,
     logout,
     requestDriveAccess,
   };

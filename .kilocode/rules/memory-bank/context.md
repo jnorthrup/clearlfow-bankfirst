@@ -34,6 +34,26 @@ The ClearFlow application is now integrated. Available features include:
 - Governance/QA components
 - Payment processing
 - User authentication flows
+- **Identity Verification** (new): Multi-provider identity verification before Google OAuth
+
+### Identity Verification Flow
+
+The app now supports a three-step onboarding:
+
+1. **Basic Info Collection** - User enters name, email, use_case
+2. **Identity Verification** - Choose from:
+   - Stripe Identity (government ID + selfie)
+   - Plaid Identity Verification (KYC/AML)
+   - Bank Link Verification (Robinhood-style)
+3. **Google OAuth Binding** - Bind Google account for app links
+
+New files:
+- `src/services/identity-verification.service.ts` - Identity verification service
+- `src/components/verification/BasicInfoCollection.tsx` - Step 1: Basic info
+- `src/components/verification/IdentityVerification.tsx` - Step 2: ID verification
+- `src/components/verification/GoogleOAuthBinding.tsx` - Step 3: Google binding
+- `src/components/verification/OnboardingFlow.tsx` - Orchestrator
+- `server/routes/verification.ts` - Backend API
 
 ## Quick Start Guide
 
@@ -80,3 +100,4 @@ export default router;
 |------|---------|
 | Initial | Template created with base setup |
 | Today | ClearFlow application integrated as subdirectory from jnorthrup/clearflow-main |
+| Today | Added identity verification flow: Stripe/Plaid/Bank verification before Google OAuth |

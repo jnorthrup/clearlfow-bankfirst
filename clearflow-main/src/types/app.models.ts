@@ -1,8 +1,28 @@
+export type IdentityProvider = 'stripe_identity' | 'plaid_id_verify' | 'bank_link' | 'google_oauth';
+export type IdentityVerificationLevel = 'none' | 'pending' | 'basic' | 'enhanced' | 'full';
+
+export interface IdentityVerificationData {
+  provider: IdentityProvider;
+  status: 'pending' | 'verified' | 'failed' | 'expired';
+  verifiedAt?: string;
+  identityScore?: number;
+  documentType?: string;
+  documentCountry?: string;
+  lastCheckedAt?: string;
+  failureReason?: string;
+  providerReferenceId?: string;
+}
+
 export interface User {
   id: string;
   name: string;
   email: string;
   isVerified: boolean;
+  useCase?: string;
+  identityVerification?: IdentityVerificationData;
+  googleSub?: string;
+  createdAt?: string;
+  updatedAt?: string;
 }
 
 export type EntityType = 'LLC' | 'C-Corp' | 'S-Corp' | 'Trust/Estate' | 'Non-profit' | 'Personal';
