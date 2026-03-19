@@ -1,120 +1,111 @@
-# System Patterns: Next.js Starter Template
+# System Patterns: ClearFlow Application
 
 ## Architecture Overview
 
 ```
-src/
-├── app/                    # Next.js App Router
-│   ├── layout.tsx          # Root layout + metadata
-│   ├── page.tsx            # Home page
-│   ├── globals.css         # Tailwind imports + global styles
-│   └── favicon.ico         # Site icon
-└── (expand as needed)
-    ├── components/         # React components (add when needed)
-    ├── lib/                # Utilities and helpers (add when needed)
-    └── db/                 # Database files (add via recipe)
+clearflow-main/
+├── server/                    # Express.js backend
+│   ├── db/                   # Database (SQLite + Drizzle)
+│   │   ├── database.ts       # Database connection
+│   │   └── migrations.sql   # Schema migrations
+│   ├── routes/              # API endpoints
+│   │   └── plaid.ts         # Plaid integration routes
+│   ├── policy/              # Business logic policies
+│   │   └── railPolicy.ts    # Transaction rail policies
+│   ├── utils/               # Server utilities
+│   │   ├── encryption.ts    # Encryption helpers
+│   │   └── routingValidator.ts
+│   ├── types.ts             # Backend type definitions
+│   └── webhooks/            # Webhook handlers
+│       └── plaidWebhook.ts  # Plaid webhook handler
+├── src/                      # React frontend
+│   ├── components/          # UI components
+│   │   ├── dashboard/       # Dashboard components
+│   │   ├── entity-card/     # Entity card components
+│   │   ├── layout/          # Header, Sidebar
+│   │   ├── plaid-link-modal/
+│   │   └── ...
+│   ├── contexts/           # React contexts
+│   │   └── AuthContext.tsx  # Authentication state
+│   ├── services/           # API client services
+│   │   ├── plaid.service.ts
+│   │   ├── auth.service.ts
+│   │   └── ledgerService.ts
+│   ├── hooks/              # Custom React hooks
+│   ├── models/             # Data models
+│   └── types/              # TypeScript types
+└── public/                  # Static assets
 ```
 
 ## Key Design Patterns
 
-### 1. App Router Pattern
+### 1. Frontend/Backend Separation
 
-Uses Next.js App Router with file-based routing:
-```
-src/app/
-├── page.tsx           # Route: /
-├── about/page.tsx     # Route: /about
-├── blog/
-│   ├── page.tsx       # Route: /blog
-│   └── [slug]/page.tsx # Route: /blog/:slug
-└── api/
-    └── route.ts       # API Route: /api
-```
+- Frontend: Vite + React (port 5173)
+- Backend: Express.js (port 3000)
 
-### 2. Component Organization Pattern (When Expanding)
+### 2. Component Organization
 
 ```
 src/components/
-├── ui/                # Reusable UI components (Button, Card, etc.)
-├── layout/            # Layout components (Header, Footer)
-├── sections/          # Page sections (Hero, Features, etc.)
-└── forms/             # Form components
+├── [feature-name]/           # Feature-specific components
+│   ├── FeatureName.tsx      # Main component
+│   └── FeatureName.module.css
+└── shared/                  # Shared UI components
 ```
 
-### 3. Server Components by Default
+### 3. Service Layer Pattern
 
-All components are Server Components unless marked with `"use client"`:
-```tsx
-// Server Component (default) - can fetch data, access DB
-export default function Page() {
-  return <div>Server rendered</div>;
-}
-
-// Client Component - for interactivity
-"use client";
-export default function Counter() {
-  const [count, setCount] = useState(0);
-  return <button onClick={() => setCount(c => c + 1)}>{count}</button>;
-}
+Services handle API communication:
+```typescript
+// services/plaid.service.ts
+export const plaidService = {
+  createLinkToken: async () => {
+    const response = await fetch('/api/plaid/create-link-token');
+    return response.json();
+  },
+  exchangePublicToken: async (publicToken: string) => {
+    const response = await fetch('/api/plaid/exchange-token', {
+      method: 'POST',
+      body: JSON.stringify({ publicToken })
+    });
+    return response.json();
+  }
+};
 ```
 
-### 4. Layout Pattern
+### 4. Context for Global State
 
-Layouts wrap pages and can be nested:
-```tsx
-// src/app/layout.tsx - Root layout
-export default function RootLayout({ children }: { children: React.ReactNode }) {
-  return (
-    <html lang="en">
-      <body>{children}</body>
-    </html>
-  );
+```typescript
+// contexts/AuthContext.tsx
+import { createContext, useContext } from 'react';
+
+interface AuthContextType {
+  user: User | null;
+  login: (credentials: Credentials) => Promise<void>;
+  logout: () => void;
 }
 
-// src/app/dashboard/layout.tsx - Nested layout
-export default function DashboardLayout({ children }: { children: React.ReactNode }) {
-  return (
-    <div className="flex">
-      <Sidebar />
-      <main>{children}</main>
-    </div>
-  );
-}
+export const AuthContext = createContext<AuthContextType | null>(null);
 ```
 
-## Styling Conventions
+## API Routes
 
-### Tailwind CSS Usage
-- Utility classes directly on elements
-- Component composition for repeated patterns
-- Responsive: `sm:`, `md:`, `lg:`, `xl:`
-
-### Common Patterns
-```tsx
-// Container
-<div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-
-// Responsive grid
-<div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
-
-// Flexbox centering
-<div className="flex items-center justify-center">
 ```
-
-## File Naming Conventions
-
-- Components: PascalCase (`Button.tsx`, `Header.tsx`)
-- Utilities: camelCase (`utils.ts`, `helpers.ts`)
-- Pages/Routes: lowercase (`page.tsx`, `layout.tsx`)
-- Directories: kebab-case (`api-routes/`) or lowercase (`components/`)
+server/routes/
+├── plaid.ts         # Bank linking endpoints
+└── (additional routes as needed)
+```
 
 ## State Management
 
-For simple needs:
-- `useState` for local component state
-- `useContext` for shared state
-- Server Components for data fetching
+- React Context for global auth state
+- Local component state with `useState`
+- Service layer for API calls
 
-For complex needs (add when necessary):
-- Zustand for client state
-- React Query for server state
+## File Naming Conventions
+
+- Components: PascalCase (`Dashboard.tsx`, `EntityCard.tsx`)
+- Services: camelCase (`plaidService.ts`, `authService.ts`)
+- Hooks: camelCase with `use` prefix (`useAuth.ts`)
+- Types/Models: PascalCase (`User.ts`, `Transaction.ts`)

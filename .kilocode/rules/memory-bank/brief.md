@@ -1,48 +1,50 @@
-# Project Brief: Next.js Starter Template
+# Project Brief: ClearFlow Application
 
 ## Purpose
 
-This is a minimal Next.js starter template designed for AI-assisted development. It provides a clean foundation that can be extended to build any type of web application through interaction with an AI assistant.
+ClearFlow is a financial management application with banking integration, governance features, and payment processing capabilities.
 
 ## Target Users
 
-- Developers wanting a clean Next.js starting point
-- Users building applications through AI-assisted coding
-- Teams needing a standardized, modern Next.js setup
+- Users managing financial entities and assets
+- Organizations requiring governance and compliance tracking
+- Teams needing payment processing and banking integration
 
 ## Core Use Case
 
-Users describe what they want to build to an AI assistant, which then expands this template by:
-
-1. Adding components and pages as needed
-2. Installing additional dependencies
-3. Setting up databases, authentication, etc. using recipes
-4. Customizing styling and branding
+Financial management platform with:
+1. Dashboard for entity management
+2. Plaid integration for bank account linking
+3. Governance documentation and Q&A
+4. Payment processing and transfers
+5. User onboarding flows
 
 ## Key Requirements
 
 ### Must Have
 
-- Modern Next.js 16 setup with App Router
-- TypeScript for type safety
-- Tailwind CSS 4 for styling
-- ESLint for code quality
-- Clean, minimal starting structure
-- Bun as package manager
+- Vite + React frontend
+- Express.js backend server
+- Plaid API integration for banking
+- Authentication system
+- Database for persistence
 
 ### Nice to Have
 
-- Recipe system for common additions (database, auth)
-- Memory bank for AI context persistence
-- Clear development guidelines
+- Enhanced governance features
+- Additional payment providers
+- Advanced analytics
 
 ## Success Metrics
 
-- Clean, zero-error TypeScript setup
-- Passing lint and type checks
+- Functional dashboard with entity management
+- Successful Plaid bank linking
+- Working payment flows
+- Clean build with no errors
 
 ## Constraints
 
-- Minimal dependencies by default
-- Framework: Next.js 16 + React 19 + Tailwind CSS 4
+- Frontend: Vite + React + TypeScript
+- Backend: Express.js
 - Package manager: Bun
+- Build tool: Vite

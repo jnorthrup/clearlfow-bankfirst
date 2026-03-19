@@ -1,71 +1,71 @@
-# Active Context: Next.js Starter Template
+# Active Context: ClearFlow Main Application
 
 ## Current State
 
-**Template Status**: ✅ Ready for development
+**Project Status**: ClearFlow application integrated as subdirectory
 
-The template is a clean Next.js 16 starter with TypeScript and Tailwind CSS 4. It's ready for AI-assisted expansion to build any type of application.
+The original Next.js template has been replaced with the ClearFlow application from `jnorthrup/clearflow-main`. Development now focuses on the ClearFlow application in `clearflow-main/` directory.
 
-## Recently Completed
+## Previously Completed (from original template)
 
-- [x] Base Next.js 16 setup with App Router
-- [x] TypeScript configuration with strict mode
-- [x] Tailwind CSS 4 integration
-- [x] ESLint configuration
-- [x] Memory bank documentation
-- [x] Recipe system for common features
+- [ ] Base Next.js 16 setup with App Router
+- [ ] TypeScript configuration with strict mode
+- [ ] Tailwind CSS 4 integration
+- [ ] ESLint configuration
+- [ ] Memory bank documentation
+- [ ] Recipe system for common features
+
+These tasks are now integrated into the ClearFlow application in `clearflow-main/`.
 
 ## Current Structure
 
 | File/Directory | Purpose | Status |
 |----------------|---------|--------|
-| `src/app/page.tsx` | Home page | ✅ Ready |
-| `src/app/layout.tsx` | Root layout | ✅ Ready |
-| `src/app/globals.css` | Global styles | ✅ Ready |
-| `.kilocode/` | AI context & recipes | ✅ Ready |
+| `clearflow-main/` | Main application | Active development |
+| `clearflow-main/src/` | Frontend components | ✅ |
+| `clearflow-main/server/` | Backend services | ✅ |
+| `clearflow-main/package.json` | Dependencies | ✅ |
 
 ## Current Focus
 
-The template is ready. Next steps depend on user requirements:
-
-1. What type of application to build
-2. What features are needed
-3. Design/branding preferences
+The ClearFlow application is now integrated. Available features include:
+- Dashboard with entity management
+- Plaid integration for banking
+- Governance/QA components
+- Payment processing
+- User authentication flows
 
 ## Quick Start Guide
 
-### To add a new page:
+### ClearFlow Development
 
-Create a file at `src/app/[route]/page.tsx`:
-```tsx
-export default function NewPage() {
-  return <div>New page content</div>;
-}
+The application uses Vite + React (not Next.js). To work on it:
+
+```bash
+cd clearflow-main
+bun install
+bun run dev
 ```
 
 ### To add components:
 
-Create `src/components/` directory and add components:
+Add to `clearflow-main/src/components/`:
 ```tsx
-// src/components/ui/Button.tsx
-export function Button({ children }: { children: React.ReactNode }) {
-  return <button className="px-4 py-2 bg-blue-600 text-white rounded">{children}</button>;
+// clearflow-main/src/components/new-component/NewComponent.tsx
+export function NewComponent() {
+  return <div>Component content</div>;
 }
 ```
 
-### To add a database:
+### Backend routes:
 
-Follow `.kilocode/recipes/add-database.md`
-
-### To add API routes:
-
-Create `src/app/api/[route]/route.ts`:
-```tsx
-import { NextResponse } from "next/server";
-
-export async function GET() {
-  return NextResponse.json({ message: "Hello" });
-}
+Add to `clearflow-main/server/routes/`:
+```ts
+// clearflow-main/server/routes/newRoute.ts
+import express from 'express';
+const router = express.Router();
+router.get('/', (req, res) => res.json({ message: 'Hello' }));
+export default router;
 ```
 
 ## Available Recipes
@@ -74,14 +74,9 @@ export async function GET() {
 |--------|------|----------|
 | Add Database | `.kilocode/recipes/add-database.md` | Data persistence with Drizzle + SQLite |
 
-## Pending Improvements
-
-- [ ] Add more recipes (auth, email, etc.)
-- [ ] Add example components
-- [ ] Add testing setup recipe
-
 ## Session History
 
 | Date | Changes |
 |------|---------|
 | Initial | Template created with base setup |
+| Today | ClearFlow application integrated as subdirectory from jnorthrup/clearflow-main |
